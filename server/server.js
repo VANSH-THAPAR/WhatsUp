@@ -5,7 +5,6 @@ const cors = require('cors');
 const app = express()
 const port = 3000
 
-
 const server = createServer(app);
 const io = new Server(server,{
     cors:{
@@ -23,8 +22,8 @@ app.get('/', (req, res) => {
 
 io.on("connection",(socket)=>{
     console.log("User connected with socket id : ",socket.id);
+    socket.emit("welcome",`welcome to the socket.io server ${socket.id}`)
 }); 
-
 
 server.listen(port, () => {
     console.log(`Server is running on http://localhost:${port}`)

@@ -15,7 +15,7 @@ const Home = () => {
     }
 
   return (
-    <div className='w-full min-h-screen flex justify-center items-center bg-zinc-900'>
+    <div className='w-screen min-h-screen flex justify-center items-center bg-zinc-900'>
         <div className='w-[30%] min-h-60 border border-slate-700 rounded-lg flex flex-col justify-evenly items-center gap-5 p-5'>
             <div className='text-3xl font-semibold text-green-500'>
                 Enter your name to continue :

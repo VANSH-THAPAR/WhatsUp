@@ -15,13 +15,15 @@ const Home = () => {
     }
 
   return (
-    <div>
-        <div>
-            enter your name
+    <div className='w-full min-h-screen flex justify-center items-center bg-zinc-900'>
+        <div className='w-[30%] min-h-60 border border-slate-700 rounded-lg flex flex-col justify-evenly items-center gap-5 p-5'>
+            <div className='text-3xl font-semibold text-green-500'>
+                Enter your name to continue :
+            </div>
+            <form action="" onSubmit={handlesubmit} className='w-full flex justify-center border border-slate-700 px-3 py-2'>
+                <input type="text" className='h-9.5 w-full text-green-200 items-center bg-zinc-900' placeholder='Enter your name : ' />
+            </form>
         </div>
-        <form action="" onSubmit={handlesubmit}>
-            <input type="text" />
-        </form>
     </div>
   )
 }

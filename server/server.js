@@ -2,6 +2,7 @@ const express = require('express');
 const http = require('http');
 const {Server} = require('socket.io');
 const cors = require('cors');
+const { log } = require('console');
 const app = express();
 const port = 3000;
 
@@ -28,8 +29,20 @@ io.on('connection',(socket)=>{
         console.log(`${userName} is joining the room`);
 
         await socket.join(room);
-    })
 
+        // sending the connected user to all users
+        // io.to(room).emit('roomNotice' , userName);\
+        
+        // sending the connected user message to add user except the connected user using broadcast
+        socket.to(room).emit('roomNotice', userName);
+
+        // socket.on('disconnect',()=>{
+        //     console.log(`user got disconnected:${socket.id}`);
+        // })
+    })
+    socket.on('chatMessage', (msg)=>{
+        socket.to(room).emit('chatMessage', msg);
+    })
 
     // socket.on('new-user-joined',(name)=>{
     //     users[socket.id] = name;

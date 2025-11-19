@@ -59,13 +59,13 @@ const Community = () => {
             message.map((msg) => {
               const isMe = msg.sender === name;
               return <div key={msg.id} className={`flex w-full ${isMe ? 'justify-end ' : ' justify-start'}`}>
-                <div className='bg-slate-300 text-black rounded-xl w-fit m-3 p-3 min-w-40 max-w-[40%]  flex flex-col gap-2'>
+                <div className='bg-slate-300 text-black rounded-xl w-fit m-3 p-3 max-w-[40%] flex flex-col gap-2'>
                   <div className='flex gap-5 justify-between items-center'>
                     <p className={`${isMe ? "text-blue-600":"text-red-600"} font-bold`}>
                       {msg.sender}</p>
                     <p className='text-[12px]'>{msg.time}</p>
                   </div>
-                  <p style={{ fontFamily: "poppins" }} className='font-semibold text-xl h-fit w-full wrap-break-word whitespace-pre-wrap leading-snug '>{msg.text}</p>
+                  <p style={{ fontFamily: "poppins" }} className='font-semibold text-xl h-fit w-full break-all whitespace-pre-wrap leading-snug '>{msg.text}</p>
                 </div>
               </div>
             })

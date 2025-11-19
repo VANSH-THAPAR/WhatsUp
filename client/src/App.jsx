@@ -19,13 +19,13 @@ const App = () => {
           </>
         } />
         <Route path='/chats' element={
-          <div className="w-auto h-screen flex flex-row bg-zinc-900">
+          <div className="w-full h-screen flex flex-row bg-zinc-900">
             <IconNavbar/>
             <ChatNavbar/>
           </div>
         } />
         <Route path='/community' element={
-          <div className="w-auto h-screen flex flex-row bg-zinc-900">
+          <div className="w-full h-screen flex flex-row bg-zinc-900">
             <IconNavbar/>
             <div className='w-full border border-zinc-700 h-full text-white p-5'>
               <Community />

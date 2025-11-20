@@ -6,6 +6,8 @@ import IconNavbar from './components/IconNavbar';
 import ChatNavbar from './components/ChatNavbar';
 import Community from './components/Community';
 import Home from './components/Home';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
 const App = () => {
 
@@ -46,6 +48,17 @@ const App = () => {
             <div className='w-[30%] border border-zinc-700 h-full text-white p-5'>
               Settings Page
             </div>
+          </div>
+        } />
+        <Route path = '/signup' element={
+          <div className="w-screen h-screen flex flex-row bg-zinc-900" style={{backgroundImage: "url('/bg.jpg')" , backgroundSize : "cover" , backgroundRepeat : "no-repeat" , backgroundPosition : "center"}}>
+            <Signup/>
+          </div>
+        } />
+
+        <Route path = '/login' element={
+          <div className="w-screen h-screen flex flex-row bg-zinc-900" style={{backgroundImage: "url('/bg.jpg')" , backgroundSize : "cover" , backgroundRepeat : "no-repeat" , backgroundPosition : "center"}}>
+            <Login/>
           </div>
         } />
       </Routes>

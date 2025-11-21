@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form"
-import { Link } from 'react-router-dom'
+import { Link, Navigate } from 'react-router-dom'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
 
@@ -11,10 +13,20 @@ const Login = () => {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => 
+  const Navigate = useNavigate();
+
+  const onSubmit = async(data) => 
+
   {
-    // this is the data of the user , use this and send it to the server to create a new user
-    console.log(data);
+    try{
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, data, {withCredentials: true});
+      console.log("login response:", response.data);
+      // alert("Logged In");
+      Navigate('/chats');
+    } catch(err){
+      console.error("Login error:", err);
+      alert("Login Failed");
+    }
   }
   return (
     <div className='w-full h-full flex justify-center items-center'>

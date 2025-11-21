@@ -2,13 +2,25 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connectWS } from './Client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
-
+import axios  from 'axios';
 
 const Community = () => {
   const socket = useRef(null);
   const [message, setMessage] = useState([]);
   const [text, setText] = useState('');
-  const name = localStorage.getItem('userName');
+  const [name, setName] = useState('');
+  const fetchuser = async() => {
+    try{
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/me`, {withCredentials: true});
+      console.log("user data:", response.data);
+      setName(response.data.userName);
+    } catch(err){
+      console.error("Fetch user error:", err);
+    }
+  }
+  useEffect(()=>{
+    fetchuser();
+  },[])
 
   const handlechatsubmit = () => {
     const msg = {

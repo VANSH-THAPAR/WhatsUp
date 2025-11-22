@@ -50,6 +50,15 @@ app.get('/me',checkJwt, (req, res) => {
     }
 });
 
-server.listen(port, () => {
+app.post('/logout',(req,res)=>{
+    res.clearCookie('token',{
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
+    });
+    res.status(200).json({message: 'Logged out successfully'});
+})
+
+server.listen(port, () => { 
     console.log(`Server is running on http://localhost:${port}`);
 });

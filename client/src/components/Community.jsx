@@ -3,18 +3,24 @@ import { connectWS } from './Client';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faPaperPlane } from '@fortawesome/free-solid-svg-icons'
 import axios  from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Community = () => {
   const socket = useRef(null);
   const [message, setMessage] = useState([]);
   const [text, setText] = useState('');
   const [name, setName] = useState('');
+  const navigate = useNavigate();
   const fetchuser = async() => {
     try{
       const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/me`, {withCredentials: true});
       console.log("user data:", response.data);
       setName(response.data.userName);
     } catch(err){
+      if(err.response && err.response.status === 401){
+        console.error("User not authenticated");
+        navigate('/login');
+      }
       console.error("Fetch user error:", err);
     }
   }

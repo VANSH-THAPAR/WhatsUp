@@ -7,12 +7,26 @@ import { faGear } from '@fortawesome/free-solid-svg-icons'
 import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
 import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom';
+import.meta.env.VITE_BACKEND_URL;
 
 const IconNavbar = () => {
   const navigate = useNavigate();
   function handlelogout(){
-    localStorage.clear();
-    navigate('/');
+    fetch(`${import.meta.env.VITE_BACKEND_URL}/logout`, {
+      method: 'POST',
+      credentials: 'include',
+    })
+    .then(response => {
+      if (response.ok) {
+        console.log('Logged out successfully');
+        navigate('/');
+      } else {
+        console.error('Logout failed');
+      }
+    })
+    .catch(error => {
+      console.error('Error during logout:', error);
+    });
   }
   return (
     <div className='h-full min-w-min w-15 text-white border border-zinc-700 flex flex-col items-center py-5 space-y-10'>  

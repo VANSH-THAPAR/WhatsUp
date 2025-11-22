@@ -10,7 +10,7 @@ const pool = require('./db/db');
 const checkJwt = require('./middleware/checkJwt');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
-    
+
 app.use(cookieParser());
 
 app.use(cors({
@@ -33,6 +33,7 @@ const io = new Server(server, {
 CommunityChatRoom(io);
 
 app.use('/',require('./routes/login'));
+app.use('/',require('./routes/signup'));
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

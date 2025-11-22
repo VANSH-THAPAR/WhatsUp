@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { useForm } from "react-hook-form"
 import { Link } from 'react-router-dom'
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Signup = () => {
 
@@ -11,10 +13,18 @@ const Signup = () => {
     formState: { errors },
   } = useForm()
 
-  const onSubmit = (data) => 
+  const navigate = useNavigate();
+
+  const onSubmit = async (data) => 
   {
-    // this is the data of the user , use this and send it to the server to create a new user
-    console.log(data);
+    try{
+      const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/signup`, data, {withCredentials: true});
+      console.log("signup response:", response.data);
+      navigate('/chats');
+    } catch(err){
+      console.error("Signup error:", err);
+      alert("Signup Failed");
+    }
   }
   return (
     <div className='w-full h-full flex justify-center items-center'>
@@ -25,15 +35,15 @@ const Signup = () => {
             type="text"
             placeholder='Username'
             className='border border-gray-300 rounded-md p-2'
-            {...register('username', { required: true, minLength: 3 })}
+            {...register('userName', { required: true, minLength: 3 })}
           />
-          {errors.username && <span className='text-red-500'>Username is required (min 3 characters)</span>}
+          {errors.userName && <span className='text-red-500'>Username is required (min 3 characters)</span>}
 
           <input
             type="email"
             placeholder='Email'
-            className='border border-gray-300 rounded-md p-2'
             {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
+            className='border border-gray-300 rounded-md p-2'
           />
           {errors.email && <span className='text-red-500'>Valid email is required</span>}
 

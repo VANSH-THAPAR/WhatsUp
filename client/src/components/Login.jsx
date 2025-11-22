@@ -13,16 +13,15 @@ const Login = () => {
     formState: { errors },
   } = useForm()
 
-  const Navigate = useNavigate();
-
+  const navigate = useNavigate();
+  
   const onSubmit = async(data) => 
-
   {
     try{
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/login`, data, {withCredentials: true});
       console.log("login response:", response.data);
       // alert("Logged In");
-      Navigate('/chats');
+      navigate('/chats');
     } catch(err){
       console.error("Login error:", err);
       alert("Login Failed");

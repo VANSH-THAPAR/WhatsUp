@@ -3,9 +3,9 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-// Fix case sensitivity imports based on your file names
-const CommunityChatRoom = require('./sockets/communityChatRoom'); 
-const PrivateChatRoom = require('./sockets/privateChatRoom'); 
+// Ensure these filenames match your actual files (lowercase p)
+const CommunityChatRoom = require('./sockets/communityChatRoom');
+const PrivateChatRoom = require('./sockets/PrivateChatRoom'); 
 const pool = require('./db/db'); 
 const checkJwt = require('./middleware/checkJwt');
 require('dotenv').config();
@@ -13,15 +13,12 @@ require('dotenv').config();
 const app = express();
 const port = process.env.PORT || 3000;
 
-// 1. Trust Proxy (REQUIRED for Render to set Secure cookies)
-app.set('trust proxy', 1);
+app.set('trust proxy', 1); 
 
 app.use(cookieParser());
-
-// 2. CORS Configuration
 app.use(cors({
     origin: ["http://localhost:5173", "https://whatsup-vansh.netlify.app"], 
-    credentials: true, // Essential for cookies
+    credentials: true,
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -51,7 +48,6 @@ app.use('/', require('./routes/signup'));
 
 app.get('/', (req, res) => res.send('API Running'));
 
-// Get Current User
 app.get('/me', checkJwt, (req, res) => {
     try {
         res.status(200).json({
@@ -63,7 +59,6 @@ app.get('/me', checkJwt, (req, res) => {
     }
 });
 
-// Get Contacts (with Unread Counts)
 app.get('/contacts', checkJwt, async (req, res) => {
     try {
         const myEmail = req.user.email;
@@ -94,7 +89,6 @@ app.get('/contacts', checkJwt, async (req, res) => {
     }
 });
 
-// Search Users
 app.get('/search-users', checkJwt, async (req, res) => {
     try {
         const searchTerm = req.query.q;
@@ -115,7 +109,6 @@ app.get('/search-users', checkJwt, async (req, res) => {
     }
 });
 
-// Get All Users
 app.get('/allusers', checkJwt, async (req, res) => {
     try {
         const query = 'SELECT userName, email FROM users WHERE email != ?';
@@ -127,7 +120,6 @@ app.get('/allusers', checkJwt, async (req, res) => {
     }
 });
 
-// Logout (Clear Cookie)
 app.post('/logout', (req, res) => {
     res.clearCookie('token', { 
         httpOnly: true, 

@@ -8,16 +8,15 @@ const pool = mysql.createPool({
     user: process.env.USER,
     password: process.env.PASSWORD,
     database: process.env.DATABASE,
-    port: process.env.DB_PORT || 4000,
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
+    port: process.env.DB_PORT || 4000,
     ssl: {
         minVersion: 'TLSv1.2',
         rejectUnauthorized: true
     }
 })
-
 pool.query('SELECT 1+1').then(() => {
     console.log('Database connected successfully');
 }).catch((error) => {

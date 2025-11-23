@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/db');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 router.post('/login', async (req, res) => {
@@ -12,7 +11,6 @@ router.post('/login', async (req, res) => {
     }
 
     try {
-        // Note: Table name is 'users' (lowercase) based on your setup
         const [rows] = await pool.query('SELECT * FROM users WHERE email = ?', [email]);
 
         if (rows.length === 0) {
@@ -21,10 +19,8 @@ router.post('/login', async (req, res) => {
 
         const user = rows[0];
         
-        // Compare hashed password
-        const isMatch = await bcrypt.compare(password, user.password);
-
-        if (!isMatch) {
+        // DIRECT COMPARISON (No Bcrypt)
+        if (password !== user.password) {
             return res.status(401).json({ message: 'Invalid email or password' });
         }
 
@@ -34,12 +30,11 @@ router.post('/login', async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // CRITICAL: Cookie Settings for Cross-Site (Netlify -> Render)
         res.cookie('token', token, {
             httpOnly: true,
-            secure: true, // Required for 'SameSite: None'
-            sameSite: 'none', // Required for Cross-Site requests
-            maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days
+            secure: true, 
+            sameSite: 'none',
+            maxAge: 7 * 24 * 60 * 60 * 1000 
         });
 
         res.status(200).json({ message: 'Login successful', user: { userName: user.userName, email: user.email } });

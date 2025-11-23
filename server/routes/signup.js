@@ -1,7 +1,6 @@
 const express = require('express');
 const router = express.Router();
 const pool = require('../db/db');
-const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
 router.post('/signup', async (req, res) => {
@@ -13,11 +12,8 @@ router.post('/signup', async (req, res) => {
             return res.status(400).json({ message: 'User already exists' });
         }
 
-        // Hash password
-        const salt = await bcrypt.genSalt(10);
-        const hashedPassword = await bcrypt.hash(password, salt);
-
-        await pool.query('INSERT INTO users (userName, email, password) VALUES (?, ?, ?)', [userName, email, hashedPassword]);
+        // DIRECT INSERT (No Bcrypt/Hashing)
+        await pool.query('INSERT INTO users (userName, email, password) VALUES (?, ?, ?)', [userName, email, password]);
 
         const token = jwt.sign(
             { userId: email, email: email, userName: userName },
@@ -25,7 +21,6 @@ router.post('/signup', async (req, res) => {
             { expiresIn: '7d' }
         );
 
-        // CRITICAL: Cookie Settings
         res.cookie('token', token, {
             httpOnly: true,
             secure: true,

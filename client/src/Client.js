@@ -1,7 +1,8 @@
 import io from 'socket.io-client';
+import.meta.env;
 
 // Change this URL if your backend runs on a different port
-const BACKEND_URL = "http://localhost:3000"; 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'; 
 
 export const connectWS = () => {
     return io(BACKEND_URL, {

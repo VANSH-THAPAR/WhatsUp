@@ -15,7 +15,7 @@ const port = process.env.PORT || 3000;
 
 app.use(cookieParser());
 app.use(cors({
-    origin: "http://localhost:5173", // Make sure this matches your Frontend URL
+    origin: ["http://localhost:5173","https://whatsup-vansh.netlify.app"], // Make sure this matches your Frontend URL
     credentials: true
 }));
 app.use(express.json());

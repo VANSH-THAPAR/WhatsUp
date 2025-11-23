@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connectWS } from '../Client'; // Make sure Client.js is in src/
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
 
 const Community = () => {
   const socket = useRef(null);
@@ -75,7 +77,7 @@ const Community = () => {
   return (
     <div className='w-full h-full flex flex-col bg-zinc-900 text-white'>
       {/* Messages Area */}
-      <div className='grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
+      <div className='flex-grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
         {message.map((msg, index) => {
             const isMe = msg.sender === name; 
             return (
@@ -102,12 +104,20 @@ const Community = () => {
             value={text} 
             onKeyDown={(e) => e.key === 'Enter' && handlechatsubmit()} 
           />
-          <button onClick={handlechatsubmit} disabled={!text.trim()} className={`${text.trim() ? 'text-green-500' : 'text-zinc-600'} p-2 transition-colors`}>
-            {/* SVG Send Icon */}
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='w-6 h-6 fill-current'>
-              <path d="M498.1 5.6c11.3 6.6 17.6 18.2 17.6 30.5V474.7c0 12.3-6.4 23.9-17.6 30.5s-24.1 6.3-36-1.1L.6 270.8c-10.7-6.1-12.7-19.6-4.1-27.7l46.2-44.5 137.9 79.1 169.5-188.7c7.8-8.7 20.3-10.3 29.5-4.1s13.4 16.9 10 27.6L191.8 387.2c-2.4 7.2-8.6 12.4-16.1 14.2l-152 35.1C21.7 441.2 7.7 440.3 0 432.2L0 432V432z"/>
-            </svg>
-          </button>
+          <button 
+  onClick={handlechatsubmit} 
+  disabled={!text.trim()} 
+  className={`group w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ease-out
+    ${text.trim() 
+      ? 'bg-linear-to-r from-green-400 to-emerald-600 text-zinc-900 shadow-[0_0_15px_rgba(74,222,128,0.5)] hover:scale-110 hover:shadow-[0_0_25px_rgba(74,222,128,0.8)] active:scale-95' 
+      : 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
+    }`}
+>
+  <FontAwesomeIcon 
+    icon={faPaperPlane} 
+    className={`text-lg transition-transform duration-300 ${text.trim() ? 'group-hover:-translate-y-0.5 group-hover:translate-x-0.5' : ''}`} 
+  />
+</button>
         </div>
       </div>
     </div>

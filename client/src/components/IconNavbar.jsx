@@ -1,18 +1,16 @@
 import React from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faMessage } from '@fortawesome/free-solid-svg-icons'
-import { faEarthAmericas } from '@fortawesome/free-solid-svg-icons'
-import { faRobot } from '@fortawesome/free-solid-svg-icons'
-import { faGear } from '@fortawesome/free-solid-svg-icons'
-import { faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
-import { Link } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom';
-import.meta.env.VITE_BACKEND_URL;
+import { faMessage, faEarthAmericas, faRobot, faGear, faRightFromBracket } from '@fortawesome/free-solid-svg-icons'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
 
 const IconNavbar = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const isActive = (path) => location.pathname.includes(path);
+
   function handlelogout(){
-    fetch(`${import.meta.env.VITE_BACKEND_URL}/logout`, {
+    fetch(`${import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000'}/logout`, {
       method: 'POST',
       credentials: 'include',
     })
@@ -28,32 +26,42 @@ const IconNavbar = () => {
       console.error('Error during logout:', error);
     });
   }
-  return (
-    <div className='h-full min-w-min w-15 text-white border border-zinc-700 flex flex-col items-center py-5 space-y-10'>  
-      <div className="h-[70%] flex flex-col gap-5">
-        <div className="text-2xl">
-          <Link to="/chats">
-            <FontAwesomeIcon icon={faMessage}/>
-          </Link>
-        </div>
-        <div className="text-2xl">
-          <Link to="/community">
-            <FontAwesomeIcon icon={faEarthAmericas} />
-          </Link>
-        </div>
-        <div className="text-2xl">
-          <Link to="/chatbot">
-            <FontAwesomeIcon icon={faRobot} />
-          </Link>
-        </div>
-        <div className="text-2xl">
-          <Link to="/settings">
-            <FontAwesomeIcon icon={faGear} />
-          </Link>
-        </div>
+
+  // Helper component for Nav Items
+  const NavItem = ({ to, pathName, icon }) => (
+    <Link to={to} className="relative group flex items-center justify-center w-12 h-12 rounded-2xl transition-all duration-300 hover:bg-white/10">
+      {/* Active Indicator Line */}
+      {isActive(pathName) && (
+        <span className="absolute left-0 w-1 h-6 bg-green-500 rounded-r-full shadow-[0_0_10px_#22c55e]"></span>
+      )}
+      
+      {/* Icon with Glow Effect */}
+      <div className={`text-xl transition-all duration-300 ${isActive(pathName) ? 'text-green-400 drop-shadow-[0_0_8px_rgba(74,222,128,0.6)] scale-110' : 'text-zinc-400 group-hover:text-zinc-200'}`}>
+        <FontAwesomeIcon icon={icon} />
       </div>
-      <div className="h-[20%] flex flex-col justify-end pb-5">
-        <div className='text-2xl' onClick={handlelogout} >
+    </Link>
+  );
+
+  return (
+    <div className='h-full w-20 bg-zinc-900/60 backdrop-blur-xl border border-white/5 rounded-3xl flex flex-col items-center py-8 gap-6 shadow-xl'>  
+      
+      {/* Brand Logo Placeholder */}
+      <div className="w-10 h-10 rounded-full bg-linear-to-br from-green-400 to-emerald-600 flex items-center justify-center text-black font-bold mb-4 shadow-lg shadow-green-500/20 cursor-default" style={{fontFamily: "Rubik Puddles"}}>
+        W
+      </div>
+
+      {/* Navigation Links */}
+      <div className="flex flex-col gap-6 w-full items-center">
+        <NavItem to="/chats" pathName="/chats" icon={faMessage} />
+        <NavItem to="/community" pathName="/community" icon={faEarthAmericas} />
+        <NavItem to="/chatbot" pathName="/chatbot" icon={faRobot} />
+        <NavItem to="/settings" pathName="/settings" icon={faGear} />
+      </div>
+
+      <div className="grow"></div>
+
+      <div className='group w-12 h-12 rounded-2xl flex items-center justify-center hover:bg-red-500/20 cursor-pointer transition-all duration-300 mb-4' onClick={handlelogout}>
+        <div className='text-xl text-zinc-400 group-hover:text-red-500 transition-colors duration-300'>
           <FontAwesomeIcon icon={faRightFromBracket} />
         </div>
       </div>

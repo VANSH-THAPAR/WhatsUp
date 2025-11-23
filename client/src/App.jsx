@@ -1,68 +1,82 @@
 import React from 'react'
-import {Routes , Route} from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 
 import IconNavbar from './components/IconNavbar';
 import ChatNavbar from './components/ChatNavbar';
 import Community from './components/Community';
-// 1. IMPORT THE COMPONENT HERE
-import PrivateChat from './components/PrivateChat'; 
+import PrivateChat from './components/PrivateChat';
 import Home from './components/Home';
 import Signup from './components/Signup';
 import Login from './components/Login';
 
 const App = () => {
-  const DarkLayout = ({ children }) => (
-    <div className="w-full h-screen flex flex-row bg-zinc-900">
-      <IconNavbar/>
-      {children}
+  // The "Glass" Layout Wrapper
+  const GlassLayout = ({ children }) => (
+    <div className="w-screen h-screen overflow-hidden relative flex bg-zinc-900"
+         style={{ backgroundImage: "url('/bg.jpg')", backgroundSize: "cover", backgroundPosition: "center" }}>
+      
+      {/* Dark Overlay for readability */}
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm z-0"></div>
+
+      {/* Content Layer */}
+      <div className="relative z-10 flex w-full h-full p-4 md:p-6 gap-4 md:gap-6">
+        <IconNavbar />
+        {children}
+      </div>
     </div>
   );
 
   return (
-    <>
-      <Routes>
-        <Route path='/' element={<Home/>} />
-        
-        {/* Chat Routes */}
-        <Route path='/chats/*' element={
-          <DarkLayout>
-            <ChatNavbar/>
+    <Routes>
+      <Route path='/' element={<Home />} />
+      
+      {/* Authenticated Routes */}
+      <Route path='/chats/*' element={
+        <GlassLayout>
+          <ChatNavbar />
+          <div className="grow h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden relative shadow-2xl">
             <Routes>
-                {/* Default screen when no chat selected */}
-                <Route path="/" element={
-                    <div className='w-full h-full text-white flex items-center justify-center border-l border-zinc-700'>
-                        Select a user to begin chatting.
-                    </div>
-                } />
-                
-                {/* 2. USE THE COMPONENT HERE */}
-                <Route path="/:email" element={<PrivateChat />} />
+              <Route path="/" element={
+                <div className='w-full h-full flex flex-col items-center justify-center text-zinc-400 animate-fade-in'>
+                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-600 mb-4" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</h2>
+                  <p>Select a contact to start messaging</p>
+                </div>
+              } />
+              <Route path="/:email" element={<PrivateChat />} />
             </Routes>
-          </DarkLayout>
-        } />
+          </div>
+        </GlassLayout>
+      } />
 
-        <Route path='/community' element={
-          <DarkLayout>
-            <div className='w-full border border-zinc-700 h-full text-white'>
-              <Community />
-            </div>
-          </DarkLayout>
-        } />
-        
-        <Route path='/chatbot' element={
-          <DarkLayout>
-            <div className='w-full border border-zinc-700 h-full text-white p-5'>ChatBot Page</div>
-          </DarkLayout>
-        } />
-        <Route path='/settings' element={
-          <DarkLayout>
-            <div className='w-full border border-zinc-700 h-full text-white p-5'>Settings Page</div>
-          </DarkLayout>
-        } />
-        <Route path = '/signup' element={<Signup/>} />
-        <Route path = '/login' element={<Login/>} />
-      </Routes>
-    </>
+      <Route path='/community' element={
+        <GlassLayout>
+          <div className='w-full h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl'>
+            <Community />
+          </div>
+        </GlassLayout>
+      } />
+
+      <Route path='/chatbot' element={
+        <GlassLayout>
+          <div className='w-full h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white'>
+            <h1 className="text-3xl font-bold text-green-400 mb-4">AI Assistant</h1>
+            <p>Coming soon...</p>
+          </div>
+        </GlassLayout>
+      } />
+
+      <Route path='/settings' element={
+        <GlassLayout>
+          <div className='w-full h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white'>
+            <h1 className="text-3xl font-bold text-green-400 mb-4">Settings</h1>
+            <p>Configure your experience.</p>
+          </div>
+        </GlassLayout>
+      } />
+
+      <Route path='/signup' element={<Signup />} />
+      <Route path='/login' element={<Login />} />
+    </Routes>
   )
 }
 

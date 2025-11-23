@@ -187,6 +187,6 @@ Contributions are welcome!
 
 ## 📞 Contact
 
-**Github Profile Link** – [https://github.com/VANSH-THAPAR]([https://github.com/VANSH-THAPAR])
+**Github Profile Link** – [https://github.com/VANSH-THAPAR](https://github.com/VANSH-THAPAR)
 
 **Project Link:** [https://whatsup-vansh.netlify.app/](https://whatsup-vansh.netlify.app/)

@@ -58,18 +58,28 @@ app.get('/contacts', checkJwt, async (req, res) => {
     try {
         const myEmail = req.user.email;
         
-        // Complex Query: Find users from PrivateConversations where I am either user1 or user2
+        // This query fetches users you've talked to AND counts unread messages from them
         const query = `
-            SELECT u.userName, u.email 
+            SELECT 
+                u.userName, 
+                u.email,
+                (
+                    SELECT COUNT(*) 
+                    FROM PrivateMessages pm 
+                    JOIN PrivateConversations pc2 ON pm.conversation_id = pc2.id
+                    WHERE pm.sender_email = u.email 
+                    AND (pc2.user1_email = ? OR pc2.user2_email = ?)
+                    AND pm.is_read = FALSE
+                ) as unreadCount
             FROM users u
             JOIN PrivateConversations pc 
-            ON (u.email = pc.user1_email OR u.email = pc.user2_email)
+                ON (u.email = pc.user1_email OR u.email = pc.user2_email)
             WHERE (pc.user1_email = ? OR pc.user2_email = ?)
             AND u.email != ? 
             GROUP BY u.email
         `;
         
-        const [contacts] = await pool.query(query, [myEmail, myEmail, myEmail]);
+        const [contacts] = await pool.query(query, [myEmail, myEmail, myEmail, myEmail, myEmail]);
         res.status(200).json(contacts);
     } catch (err) {
         console.error('Error fetching contacts:', err);

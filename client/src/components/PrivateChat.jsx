@@ -69,17 +69,17 @@ const PrivateChat = () => {
   }, [myEmail, targetEmail]);
 
   // 4. Send Message
+// Inside PrivateChat.jsx
+
+  // ... (rest of code)
+
   const handleSend = () => {
-    if (!text.trim()) return;
-    
-    if (!conversationId) {
-        console.error("Cannot send: No Conversation ID. Are you connected?");
-        return;
-    }
+    if (!text.trim() || !conversationId) return;
 
     const msgData = {
         conversationId,
         senderEmail: myEmail,
+        targetEmail: targetEmail, // <--- ADD THIS LINE
         text: text.trim()
     };
 
@@ -129,7 +129,7 @@ const PrivateChat = () => {
             type="text" 
             placeholder={conversationId ? 'Type a message...' : 'Connecting...'}
             disabled={!conversationId}
-            className='flex-grow bg-transparent px-3 text-white outline-none disabled:opacity-50' 
+            className='grow bg-transparent px-3 text-white outline-none disabled:opacity-50' 
             onChange={(e) => setText(e.target.value)} 
             value={text} 
             onKeyDown={(e) => e.key === 'Enter' && handleSend()} 

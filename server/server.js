@@ -3,21 +3,29 @@ const http = require('http');
 const { Server } = require('socket.io');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
-const CommunityChatRoom = require('./sockets/communityChatRoom');
-const PrivateChatRoom = require('./sockets/PrivateChatRoom');
+// Fix case sensitivity imports based on your file names
+const CommunityChatRoom = require('./sockets/communityChatRoom'); 
+const PrivateChatRoom = require('./sockets/privateChatRoom'); 
 const pool = require('./db/db'); 
 const checkJwt = require('./middleware/checkJwt');
 require('dotenv').config();
 
 const app = express();
-// Use the PORT from .env or default to 3000
 const port = process.env.PORT || 3000;
 
+// 1. Trust Proxy (REQUIRED for Render to set Secure cookies)
+app.set('trust proxy', 1);
+
 app.use(cookieParser());
+
+// 2. CORS Configuration
 app.use(cors({
-    origin: ["http://localhost:5173","https://whatsup-vansh.netlify.app"], // Make sure this matches your Frontend URL
-    credentials: true
+    origin: ["http://localhost:5173", "https://whatsup-vansh.netlify.app"], 
+    credentials: true, // Essential for cookies
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"]
 }));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -25,8 +33,9 @@ const server = http.createServer(app);
 
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173",
-        methods: ["GET", "POST"]
+        origin: ["http://localhost:5173", "https://whatsup-vansh.netlify.app"],
+        methods: ["GET", "POST"],
+        credentials: true
     }
 });
 
@@ -42,7 +51,7 @@ app.use('/', require('./routes/signup'));
 
 app.get('/', (req, res) => res.send('API Running'));
 
-// 1. Get Current User
+// Get Current User
 app.get('/me', checkJwt, (req, res) => {
     try {
         res.status(200).json({
@@ -54,11 +63,10 @@ app.get('/me', checkJwt, (req, res) => {
     }
 });
 
+// Get Contacts (with Unread Counts)
 app.get('/contacts', checkJwt, async (req, res) => {
     try {
         const myEmail = req.user.email;
-        
-        // This query fetches users you've talked to AND counts unread messages from them
         const query = `
             SELECT 
                 u.userName, 
@@ -78,7 +86,6 @@ app.get('/contacts', checkJwt, async (req, res) => {
             AND u.email != ? 
             GROUP BY u.email
         `;
-        
         const [contacts] = await pool.query(query, [myEmail, myEmail, myEmail, myEmail, myEmail]);
         res.status(200).json(contacts);
     } catch (err) {
@@ -87,13 +94,12 @@ app.get('/contacts', checkJwt, async (req, res) => {
     }
 });
 
-// 2. Search Users (For starting a NEW chat)
+// Search Users
 app.get('/search-users', checkJwt, async (req, res) => {
     try {
         const searchTerm = req.query.q;
         if (!searchTerm) return res.json([]);
 
-        // Search users by name or email, excluding myself
         const query = `
             SELECT userName, email FROM users 
             WHERE (userName LIKE ? OR email LIKE ?) 
@@ -102,7 +108,6 @@ app.get('/search-users', checkJwt, async (req, res) => {
         `;
         const wildCard = `%${searchTerm}%`;
         const [users] = await pool.query(query, [wildCard, wildCard, req.user.email]);
-        
         res.status(200).json(users);
     } catch (err) {
         console.error('Search error:', err);
@@ -110,10 +115,9 @@ app.get('/search-users', checkJwt, async (req, res) => {
     }
 });
 
-// 2. Get All Users (For Sidebar) - FIXED TABLE NAME
+// Get All Users
 app.get('/allusers', checkJwt, async (req, res) => {
     try {
-        // FIXED: Changed 'Users' to 'users' to match your table name
         const query = 'SELECT userName, email FROM users WHERE email != ?';
         const [users] = await pool.query(query, [req.user.email]);
         res.status(200).json(users);
@@ -123,8 +127,13 @@ app.get('/allusers', checkJwt, async (req, res) => {
     }
 });
 
+// Logout (Clear Cookie)
 app.post('/logout', (req, res) => {
-    res.clearCookie('token', { httpOnly: true, secure: false, sameSite: 'lax' });
+    res.clearCookie('token', { 
+        httpOnly: true, 
+        secure: true, 
+        sameSite: 'none' 
+    });
     res.status(200).json({ message: 'Logged out successfully' });
 })
 

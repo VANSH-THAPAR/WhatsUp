@@ -88,7 +88,7 @@ const ChatNavbar = () => {
         <input type="text" className='ml-3 w-full bg-transparent outline-none text-white text-sm' placeholder='Search users...' value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
       </div>
       
-      <div className='flex-grow overflow-y-auto space-y-2 custom-scrollbar'>
+      <div className='grow overflow-y-auto space-y-2 custom-scrollbar'>
         <p className='text-xs uppercase font-bold text-zinc-500 mb-2'>{searchTerm ? 'Results' : 'Chats'}</p>
         
         {displayList.map((user, idx) => (

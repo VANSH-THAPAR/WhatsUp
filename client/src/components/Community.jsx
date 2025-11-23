@@ -75,7 +75,7 @@ const Community = () => {
   return (
     <div className='w-full h-full flex flex-col bg-zinc-900 text-white'>
       {/* Messages Area */}
-      <div className='flex-grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
+      <div className='grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
         {message.map((msg, index) => {
             const isMe = msg.sender === name; 
             return (
@@ -97,7 +97,7 @@ const Community = () => {
           <input 
             type="text" 
             placeholder='Type a message...' 
-            className='flex-grow bg-transparent px-3 text-white outline-none placeholder-zinc-500' 
+            className='grow bg-transparent px-3 text-white outline-none placeholder-zinc-500' 
             onChange={(e) => { setText(e.target.value) }} 
             value={text} 
             onKeyDown={(e) => e.key === 'Enter' && handlechatsubmit()} 

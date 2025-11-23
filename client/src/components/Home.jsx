@@ -16,7 +16,7 @@ const Home = () => {
             
             {/* Hero Title with Neon Gradient */}
             <div className='text-center animate-fade-in-down'>
-                <h1 className='text-7xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 via-emerald-500 to-green-600 drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]' 
+                <h1 className='text-7xl md:text-8xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-green-400 via-emerald-500 to-green-600 drop-shadow-[0_0_15px_rgba(34,197,94,0.5)]' 
                     style={{fontFamily: "Rubik Puddles"}}>
                     WhatsUp
                 </h1>

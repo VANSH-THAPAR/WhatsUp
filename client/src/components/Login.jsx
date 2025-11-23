@@ -34,7 +34,7 @@ const Login = () => {
       <div className="relative z-10 w-[90%] md:w-[35%] lg:w-[28%] bg-zinc-900/40 border border-zinc-700/50 backdrop-blur-xl rounded-3xl shadow-[0_0_40px_rgba(34,197,94,0.2)] p-8 flex flex-col items-center transform transition-all hover:scale-[1.01] duration-500">
         
         {/* Header with funky font */}
-        <h2 className='text-5xl font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600 drop-shadow-sm' 
+        <h2 className='text-5xl font-extrabold mb-8 text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-600 drop-shadow-sm' 
             style={{ fontFamily: "Rubik Puddles" }}>
           Welcome Back
         </h2>
@@ -68,7 +68,7 @@ const Login = () => {
           {/* Submit Button */}
           <button 
             type="submit" 
-            className='w-full bg-gradient-to-r from-green-600 to-green-500 text-black font-bold text-xl rounded-xl p-4 mt-4 shadow-lg hover:shadow-green-500/50 hover:scale-[1.02] active:scale-95 transition-all duration-300 ease-out'
+            className='w-full bg-linear-to-r from-green-600 to-green-500 text-black font-bold text-xl rounded-xl p-4 mt-4 shadow-lg hover:shadow-green-500/50 hover:scale-[1.02] active:scale-95 transition-all duration-300 ease-out'
             style={{ fontFamily: "Cabin Sketch" }}
           >
             JUMP IN

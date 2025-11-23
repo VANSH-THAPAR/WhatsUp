@@ -107,7 +107,7 @@ const PrivateChat = () => {
       </div>
 
       {/* Messages */}
-      <div className='flex-grow overflow-y-auto p-4 space-y-3 custom-scrollbar' style={{ height: '80%' }}>
+      <div className='grow overflow-y-auto p-4 space-y-3 custom-scrollbar' style={{ height: '80%' }}>
         {messages.map((msg, index) => {
             const isMe = msg.senderEmail === myEmail;
             return (

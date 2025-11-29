@@ -11,11 +11,15 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0,
-    port: process.env.DB_PORT || 4000,
+    port: process.env.DB_PORT || 3306,
     ssl: {
         minVersion: 'TLSv1.2',
         rejectUnauthorized: true
     }
+    // uncomment the following lines when working on local host and comment the above lines
+    // ssl: {
+    //     rejectUnauthorized: false
+    // }
 })
 pool.query('SELECT 1+1').then(() => {
     console.log('Database connected successfully');

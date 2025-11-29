@@ -8,6 +8,7 @@ import PrivateChat from './components/PrivateChat';
 import Home from './components/Home';
 import Signup from './components/Signup';
 import Login from './components/Login';
+import ChatbotSettings from './components/ChatbotSettings';
 
 const App = () => {
   // The "Glass" Layout Wrapper
@@ -67,9 +68,9 @@ const App = () => {
 
       <Route path='/settings' element={
         <GlassLayout>
-          <div className='w-full h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white'>
+          <div className='w-full h-fit max-h-full overflow-y-auto custom-scrollbar bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white'>
             <h1 className="text-3xl font-bold text-green-400 mb-4">Settings</h1>
-            <p>Configure your experience.</p>
+            <ChatbotSettings/>
           </div>
         </GlassLayout>
       } />

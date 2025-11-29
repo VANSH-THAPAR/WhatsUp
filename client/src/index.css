@@ -1,5 +1,24 @@
 @import "tailwindcss";
 
-/* *{
-    box-sizing: border-box;
-} */
+@layer utilities {
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px; /* Very thin and sleek */
+  }
+
+  /* The background of the scrollbar (Track) */
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent; /* Keeps your glass effect visible */
+  }
+
+  /* The moving part (Thumb) */
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(82, 82, 91, 0.5); /* zinc-600 with opacity */
+    border-radius: 20px; /* Makes it round */
+  }
+
+  /* On Hover */
+  .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: #22c55e; /* green-500 - Matches your theme accents */
+    cursor: pointer;
+  }
+}

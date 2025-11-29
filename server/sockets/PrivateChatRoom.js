@@ -1,7 +1,5 @@
-// sockets/privateChatRoom.js
 const pool = require('../db/db'); 
 
-// ... getConversationId helper stays the same ...
 const getConversationId = async (user1, user2) => {
     const [u1, u2] = [user1, user2].sort();
     try {
@@ -17,12 +15,10 @@ const getConversationId = async (user1, user2) => {
 const PrivateChatRoom = (io) => {
     io.on('connection', (socket) => {
 
-        // 1. GLOBAL USER ROOM (For Sidebar Notifications)
         socket.on('registerUser', (email) => {
-            socket.join(email); // User joins a room named "my@email.com"
+            socket.join(email);
         });
         
-        // 2. JOIN CHAT (Mark messages as read)
         socket.on('joinPrivateChat', async (data) => {
             const { myEmail, targetEmail } = data;
             if (!myEmail || !targetEmail) return;

@@ -3,6 +3,8 @@ const dotenv = require('dotenv');
 
 dotenv.config();
 
+const isSSL = process.env.DB_SSL === "true";
+
 const pool = mysql.createPool({
     host: process.env.HOST,
     user: process.env.USER,
@@ -12,14 +14,14 @@ const pool = mysql.createPool({
     connectionLimit: 10,
     queueLimit: 0,
     port: process.env.DB_PORT || 3306,
-    ssl: {
-        minVersion: 'TLSv1.2',
-        rejectUnauthorized: true
-    }
-    // uncomment the following lines when working on local host and comment the above lines
-    // ssl: {
-    //     rejectUnauthorized: false
-    // }
+    ssl: isSSL
+    ? {
+        minVersion: "TLSv1.2",
+        rejectUnauthorized: true,
+      }
+    : {
+        rejectUnauthorized: false,
+      }
 })
 pool.query('SELECT 1+1').then(() => {
     console.log('Database connected successfully');

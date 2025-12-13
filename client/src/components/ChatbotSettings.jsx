@@ -1,37 +1,40 @@
 import React from 'react';
 import { useForm } from 'react-hook-form';
-import { Sparkles, Brain, Sliders, MessageSquare, Database } from 'lucide-react'; // Assuming you can use lucide-react or similar icons
+// Added FileText to imports for the document icon
+import { Sparkles, Brain, Sliders, Database, FileText } from 'lucide-react'; 
 
 const ChatbotSettings = () => {
   const {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm({
     defaultValues: {
       temperature: 0.7,
       maxTokens: 500,
       enableRAG: true,
-      model: 'gemini-2.5-pro',
+      model: 'gemini-1.5-flash', // Corrected model name for stability
+      documentContent: ""        // New field for RAG
     }
   });
 
   // Watch fields for conditional rendering
   const mood = watch('mood');
-  const category = watch('category');
+  const enableDocs = watch('enableDocs'); // We watch this to toggle the text area
   const temperature = watch('temperature');
 
   const onSubmit = async (data) => {
     console.log("Saving AI Configuration:", data);
     // SAVE TO LOCAL STORAGE
     localStorage.setItem('chatbot_settings', JSON.stringify(data));
-    alert("Settings Saved!"); // Simple feedback
+    alert("AI Settings Deployed! 🧠"); 
   };
 
   return (
     <div className='w-full max-w-4xl mx-auto backdrop-blur-xl bg-black/40 border border-white/10 rounded-3xl p-8 text-white shadow-2xl'>
+      
+      {/* Header */}
       <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
         <Brain className="text-green-500 w-8 h-8" />
         <div>
@@ -71,7 +74,7 @@ const ChatbotSettings = () => {
                         <input
                             type="text"
                             placeholder='e.g., A pirate from the 1700s'
-                            className='w-full bg-zinc-900/50 border border-zinc-700 rounded-xl p-4 focus:border-green-500 outline-none'
+                            className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-4 focus:border-green-500 outline-none'
                             {...register('otherMood', { required: true })}
                         />
                     </div>
@@ -93,22 +96,19 @@ const ChatbotSettings = () => {
             </div>
         </div>
 
-        {/* --- SECTION 2: HYPERPARAMETERS (The GenAI Flex) --- */}
+        {/* --- SECTION 2: HYPERPARAMETERS --- */}
         <div className='space-y-4 p-6 bg-white/5 rounded-2xl border border-white/5'>
             <h3 className='text-green-400 font-semibold flex items-center gap-2'><Sliders size={18}/> Model Hyperparameters</h3>
             
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* Temperature Slider */}
+                {/* Temperature */}
                 <div className="group">
                     <div className="flex justify-between mb-2">
                         <label className='text-sm font-medium text-zinc-300'>Temperature (Creativity)</label>
                         <span className='text-green-400 font-mono'>{temperature}</span>
                     </div>
                     <input 
-                        type="range" 
-                        min="0" 
-                        max="1" 
-                        step="0.1"
+                        type="range" min="0" max="1" step="0.1"
                         className="w-full h-2 bg-zinc-700 rounded-lg appearance-none cursor-pointer accent-green-500"
                         {...register('temperature')}
                     />
@@ -122,7 +122,7 @@ const ChatbotSettings = () => {
                 <div className="group">
                      <label className='block mb-2 text-sm font-medium text-zinc-300'>Max Output Tokens</label>
                      <select 
-                        className='w-full bg-zinc-900/50 border border-zinc-700 rounded-xl p-3 focus:border-green-500 outline-none'
+                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-3 focus:border-green-500 outline-none'
                         {...register('maxTokens')}
                      >
                         <option value="256">Short (256)</option>
@@ -134,34 +134,53 @@ const ChatbotSettings = () => {
             </div>
         </div>
 
-        {/* --- SECTION 3: KNOWLEDGE & CONTEXT (RAG) --- */}
+        {/* --- SECTION 3: KNOWLEDGE BASE (RAG UI ADDED HERE) --- */}
         <div className='space-y-4'>
             <h3 className='text-green-400 font-semibold flex items-center gap-2'><Database size={18}/> Knowledge Base (RAG)</h3>
             
             <div className="flex flex-wrap gap-4">
-                <label className="flex items-center space-x-3 p-4 border border-zinc-700 rounded-xl cursor-pointer hover:bg-zinc-800 transition">
+                <label className="flex items-center space-x-3 p-4 border border-zinc-700 rounded-xl cursor-pointer hover:bg-zinc-800 transition select-none">
                     <input type="checkbox" className="w-5 h-5 accent-green-500" {...register('enableHistory')} />
                     <span className="text-zinc-300">Conversation History</span>
                 </label>
                 
-                <label className="flex items-center space-x-3 p-4 border border-zinc-700 rounded-xl cursor-pointer hover:bg-zinc-800 transition">
+                <label className="flex items-center space-x-3 p-4 border border-zinc-700 rounded-xl cursor-pointer hover:bg-zinc-800 transition select-none">
                     <input type="checkbox" className="w-5 h-5 accent-green-500" {...register('enableWebSearch')} />
                     <span className="text-zinc-300">Live Web Search</span>
                 </label>
 
-                <label className="flex items-center space-x-3 p-4 border border-zinc-700 rounded-xl cursor-pointer hover:bg-zinc-800 transition">
+                {/* The Trigger for the Document Input */}
+                <label className="flex items-center space-x-3 p-4 border border-zinc-700 rounded-xl cursor-pointer hover:bg-zinc-800 transition select-none">
                     <input type="checkbox" className="w-5 h-5 accent-green-500" {...register('enableDocs')} />
                     <span className="text-zinc-300">Project Documents</span>
                 </label>
             </div>
+
+            {/* --- CONDITIONAL DOCUMENT INPUT (Preserving Design) --- */}
+            {enableDocs && (
+                <div className="w-full mt-4 animate-in fade-in slide-in-from-top-4 duration-300">
+                    <div className='bg-zinc-900/30 p-4 rounded-xl border border-green-500/30'>
+                        <label className='block mb-2 text-sm font-medium text-green-400 flex items-center gap-2'>
+                            <FileText size={16}/> 
+                            Paste Context / Documentation
+                        </label>
+                        <textarea
+                            placeholder='Paste your text here (e.g., "The secret code is 1234", or "This app was built by Vansh"). The AI will use this to answer questions.'
+                            className='w-full bg-black/20 text-white border border-zinc-600 rounded-xl p-4 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none font-mono text-sm h-40 resize-none'
+                            {...register('documentContent')}
+                        />
+                        <p className='text-xs text-zinc-500 mt-2 ml-1'>* The AI will prioritize this information when answering.</p>
+                    </div>
+                </div>
+            )}
         </div>
 
         {/* --- SECTION 4: SYSTEM PROMPT --- */}
         <div className="group">
             <label className='block mb-2 text-sm font-medium text-zinc-300'>System Prompt</label>
-            <p className='text-xs text-zinc-500 mb-2'>This instruction defines the core behavior of the model and cannot be overridden by user messages.</p>
+            <p className='text-xs text-zinc-500 mb-2'>This instruction defines the core behavior of the model.</p>
             <textarea
-                placeholder='e.g., You are a helpful AI assistant specialized in React development. Always prefer functional components...'
+                placeholder='e.g., You are a helpful AI assistant specialized in React development...'
                 className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-4 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none font-mono text-sm h-32 resize-none'
                 {...register('systemPrompt', { required: true, minLength: 10 })} 
             />

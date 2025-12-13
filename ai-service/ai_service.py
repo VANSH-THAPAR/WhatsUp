@@ -10,41 +10,48 @@ class AIService:
     def __init__(self):
         api_key = os.getenv("GOOGLE_API_KEY")
         if not api_key:
-            print("CRITICAL ERROR: GOOGLE_API_KEY missing!")
+            print("CRITICAL: GOOGLE_API_KEY is missing.")
 
         self.llm = ChatGoogleGenerativeAI(
             model="gemini-2.5-flash", 
             temperature=0.7,
-            google_api_key=api_key,
-            convert_system_message_to_human=True
+            google_api_key=api_key
         )
 
     def generate_chat_response(self, message: str, settings: dict):
         try:
-            print(f"DEBUG INPUT SETTINGS: {settings}")
-
-            system_instruction = settings.get('systemPrompt') or settings.get('description') or "You are a helpful assistant."
+            # 1. Extract inputs
             mood = settings.get('mood', 'Helpful')
+            system_instruction = settings.get('systemPrompt', "You are a helpful assistant.")
             temp = float(settings.get('temperature', 0.7))
-
-            system_message = f"""
-            IMPORTANT INSTRUCTION: {system_instruction}
             
-            Current Persona: {mood}
-            """
+            # 2. RAG Logic (Simple Document Injection)
+            # If the user enabled docs, we inject the text directly into the system prompt.
+            context_block = ""
+            if settings.get('enableDocs'):
+                doc_content = settings.get('documentContent', "")
+                if doc_content:
+                    context_block = f"\n\n=== DOCUMENT CONTEXT ===\n{doc_content}\n\nINSTRUCTION: Answer the user's question using the context above."
 
+            # 3. Create the Template
+            # We use a clean template structure that LangChain optimizes for Gemini
             prompt = ChatPromptTemplate.from_messages([
-                ("system", system_message),
+                ("system", "You are an AI with the following persona: {mood}.\nCore Instruction: {system_instruction}\n{context_block}"),
                 ("human", "{input}"),
             ])
 
-            model = self.llm.bind(temperature=temp)
+            # 4. Bind Temperature & Run
+            chain = prompt | self.llm.bind(temperature=temp) | StrOutputParser()
 
-            chain = prompt | model | StrOutputParser()
-            return chain.invoke({"input": message})
+            return chain.invoke({
+                "mood": mood,
+                "system_instruction": system_instruction,
+                "context_block": context_block,
+                "input": message
+            })
 
         except Exception as e:
             print(f"AI ERROR: {e}")
-            return f"Error: {str(e)}"
+            return f"I encountered an error: {str(e)}"
 
 ai_service = AIService()

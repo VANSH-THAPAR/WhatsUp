@@ -5,10 +5,11 @@ from ai_service import ai_service
 
 app = FastAPI()
 
+# Allowed Origins (Local + Production)
 origins = [
-    "http://localhost:5173",                 # Vite Localhost
-    "http://localhost:3000",                 # Node Localhost
-    "http://localhost:8000",                 # Python Localhost
+    "http://localhost:5173",
+    "http://localhost:3000",
+    "http://localhost:8000",
     "https://whatsup-vansh.netlify.app",
     "https://whatsup-xuw3.onrender.com"
 ]
@@ -22,12 +23,16 @@ app.add_middleware(
 )
 
 class ChatSettings(BaseModel):
-    model_config = ConfigDict(extra='ignore')
+    model_config = ConfigDict(extra='ignore') # Ignore extra fields from frontend
 
     mood: str = "professional"
     systemPrompt: str = "You are a helpful AI."
     temperature: float = 0.7
     
+    # RAG Features
+    enableDocs: bool = False
+    documentContent: str = ""
+
 class ChatRequest(BaseModel):
     message: str
     settings: ChatSettings 
@@ -35,8 +40,10 @@ class ChatRequest(BaseModel):
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
     try:
-        settings_dict = request.settings.model_dump()
-        response_text = ai_service.generate_chat_response(request.message, settings_dict)
+        response_text = ai_service.generate_chat_response(
+            request.message, 
+            request.settings.model_dump()
+        )
         return {"response": response_text}
     except Exception as e:
         print(f"ENDPOINT ERROR: {e}")

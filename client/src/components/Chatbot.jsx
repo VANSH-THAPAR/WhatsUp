@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-// FIX: Added 'Sliders' to the import list below
-import { Send, Bot, User, RefreshCw, AlertCircle, Sliders } from 'lucide-react';
+import { Send, Bot, User, RefreshCw, Sliders } from 'lucide-react';
 import axios from 'axios';
 
 const Chatbot = () => {
@@ -9,34 +8,46 @@ const Chatbot = () => {
   ]);
   const [input, setInput] = useState('');
   const [loading, setLoading] = useState(false);
-  const [settings, setSettings] = useState(null);
+  
+  // This state is just for the UI label at the bottom
+  const [displaySettings, setDisplaySettings] = useState(null);
+  
   const messagesEndRef = useRef(null);
 
-  // Load settings on mount
+  // Load initial settings for UI display only
+  const loadSettingsForDisplay = () => {
+    const saved = localStorage.getItem('chatbot_settings');
+    if (saved) setDisplaySettings(JSON.parse(saved));
+  };
+
   useEffect(() => {
-    const savedSettings = localStorage.getItem('chatbot_settings');
-    if (savedSettings) {
-      setSettings(JSON.parse(savedSettings));
-    } else {
-      // Default fallback
-      setSettings({
-        mood: 'helpful',
-        temperature: 0.7,
-        systemPrompt: 'You are a helpful assistant.',
-        enableDocs: false
-      });
-    }
+    loadSettingsForDisplay();
+    // Optional: Listen for storage events if you want the UI to update instantly across tabs
+    window.addEventListener('storage', loadSettingsForDisplay);
+    return () => window.removeEventListener('storage', loadSettingsForDisplay);
   }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
-
   useEffect(scrollToBottom, [messages]);
 
   const handleSend = async (e) => {
     e.preventDefault();
     if (!input.trim()) return;
+
+    // --- CRITICAL FIX: READ LATEST SETTINGS HERE ---
+    // We do not rely on state because it might be stale.
+    // We read directly from the "Brain" (localStorage) right before sending.
+    const rawSettings = localStorage.getItem('chatbot_settings');
+    const currentSettings = rawSettings ? JSON.parse(rawSettings) : {
+        mood: 'helpful',
+        temperature: 0.7,
+        systemPrompt: "You are a helpful assistant."
+    };
+    
+    // Update the UI label too
+    setDisplaySettings(currentSettings);
 
     const userMessage = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
@@ -44,13 +55,11 @@ const Chatbot = () => {
     setLoading(true);
 
     try {
-      // Send Message + Current Settings to Backend
-      // Note: Make sure your .env is set up or use localhost:8000 directly for testing
       const API_URL = import.meta.env.VITE_API_BASE_URL || "http://localhost:8000";
       
       const response = await axios.post(`${API_URL}/api/chat`, {
         message: input,
-        settings: settings // Passing the "Brain" config
+        settings: currentSettings // Sending the FRESH settings
       });
 
       const aiMessage = { role: 'ai', content: response.data.response };
@@ -58,7 +67,7 @@ const Chatbot = () => {
 
     } catch (error) {
       console.error("Chat Error:", error);
-      setMessages(prev => [...prev, { role: 'ai', content: "Error connecting to the AI brain. Is FastAPI running?", isError: true }]);
+      setMessages(prev => [...prev, { role: 'ai', content: "Error connecting to AI. Is the server running?", isError: true }]);
     } finally {
       setLoading(false);
     }
@@ -70,13 +79,9 @@ const Chatbot = () => {
       <div className='flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4'>
         {messages.map((msg, index) => (
           <div key={index} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-            
-            {/* Avatar */}
             <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-green-600' : 'bg-zinc-700'}`}>
               {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
             </div>
-
-            {/* Bubble */}
             <div className={`p-4 rounded-2xl max-w-[80%] whitespace-pre-wrap ${
               msg.role === 'user' 
                 ? 'bg-green-600 text-black rounded-tr-none' 
@@ -108,13 +113,13 @@ const Chatbot = () => {
           type="text"
           value={input}
           onChange={(e) => setInput(e.target.value)}
-          placeholder={settings?.enableDocs ? "Ask a question about your project docs..." : "Type a message..."}
-          className='w-full bg-zinc-800/50 border border-zinc-600 rounded-xl py-4 pl-4 pr-12 text-white focus:outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all'
+          placeholder={displaySettings?.enableDocs ? "Ask a question about your docs..." : "Type a message..."}
+          className='w-full bg-zinc-800/50 border border-zinc-600 rounded-xl py-4 pl-4 pr-12 text-white focus:outline-none focus:border-green-500 transition-all'
         />
         <button 
           type="submit" 
           disabled={loading}
-          className='absolute right-2 top-2 bottom-4 bg-green-600 hover:bg-green-500 text-black rounded-lg p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed'
+          className='absolute right-2 top-2 bottom-4 bg-green-600 hover:bg-green-500 text-black rounded-lg p-2 transition-colors disabled:opacity-50'
         >
           <Send size={20} />
         </button>
@@ -123,8 +128,8 @@ const Chatbot = () => {
       {/* 3. Settings Indicator */}
       <div className='mt-0 mb-2 text-xs text-zinc-500 flex items-center gap-2 justify-center'>
         <Sliders size={10} />
-        <span>Active Persona: {settings?.mood || 'Default'} | Temp: {settings?.temperature || 0.7}</span>
-        {settings?.enableDocs && <span className='text-green-500 font-bold'>• RAG Active</span>}
+        <span>Persona: {displaySettings?.mood || 'Default'}</span>
+        {displaySettings?.enableDocs && <span className='text-green-500 font-bold'>• RAG Active</span>}
       </div>
     </div>
   );

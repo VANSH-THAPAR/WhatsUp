@@ -77,7 +77,7 @@ const Community = () => {
   return (
     <div className='w-full h-full flex flex-col bg-zinc-900 text-white'>
       {/* Messages Area */}
-      <div className='flex-grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
+      <div className='grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
         {message.map((msg, index) => {
             const isMe = msg.sender === name; 
             return (

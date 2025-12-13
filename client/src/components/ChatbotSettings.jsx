@@ -170,7 +170,7 @@ const ChatbotSettings = () => {
 
         <button
             type="submit"
-            className='w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white font-bold text-lg rounded-xl p-4 mt-4 shadow-lg hover:shadow-green-500/20 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200'
+            className='w-full bg-linear-to-r from-green-600 to-emerald-600 text-white font-bold text-lg rounded-xl p-4 mt-4 shadow-lg hover:shadow-green-500/20 hover:scale-[1.01] active:scale-[0.98] transition-all duration-200'
         >
             Deploy Configuration
         </button>

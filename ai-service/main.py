@@ -5,23 +5,29 @@ from ai_service import ai_service
 
 app = FastAPI()
 
+origins = [
+    "http://localhost:5173",                 # Vite Localhost
+    "http://localhost:3000",                 # Node Localhost
+    "http://localhost:8000",                 # Python Localhost
+    "https://whatsup-vansh.netlify.app",
+    "https://whatsup-xuw3.onrender.com"
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
 class ChatSettings(BaseModel):
-    # This configuration allows extra fields (like 'maxTokens', 'model') to be passed without error
     model_config = ConfigDict(extra='ignore')
 
     mood: str = "professional"
     systemPrompt: str = "You are a helpful AI."
     temperature: float = 0.7
-    # Add other fields if you need them specifically, otherwise 'extra=ignore' handles them
-
+    
 class ChatRequest(BaseModel):
     message: str
     settings: ChatSettings 
@@ -29,7 +35,6 @@ class ChatRequest(BaseModel):
 @app.post("/api/chat")
 async def chat_endpoint(request: ChatRequest):
     try:
-        # Pass all settings (including extras) to the service
         settings_dict = request.settings.model_dump()
         response_text = ai_service.generate_chat_response(request.message, settings_dict)
         return {"response": response_text}

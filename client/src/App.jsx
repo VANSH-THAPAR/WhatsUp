@@ -40,7 +40,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={
                 <div className='w-full h-full flex flex-col items-center justify-center text-zinc-400 animate-fade-in'>
-                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600 mb-4" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</h2>
+                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-600 mb-4" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</h2>
                   <p>Select a contact to start messaging</p>
                 </div>
               } />

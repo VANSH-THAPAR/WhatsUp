@@ -9,6 +9,7 @@ import Home from './components/Home';
 import Signup from './components/Signup';
 import Login from './components/Login';
 import ChatbotSettings from './components/ChatbotSettings';
+import Chatbot from './components/Chatbot';
 
 const App = () => {
   // The "Glass" Layout Wrapper
@@ -39,7 +40,7 @@ const App = () => {
             <Routes>
               <Route path="/" element={
                 <div className='w-full h-full flex flex-col items-center justify-center text-zinc-400 animate-fade-in'>
-                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-600 mb-4" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</h2>
+                  <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-600 mb-4" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</h2>
                   <p>Select a contact to start messaging</p>
                 </div>
               } />
@@ -61,16 +62,31 @@ const App = () => {
         <GlassLayout>
           <div className='w-full h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white'>
             <h1 className="text-3xl font-bold text-green-400 mb-4">AI Assistant</h1>
-            <p>Coming soon...</p>
+            <Chatbot/>
           </div>
         </GlassLayout>
       } />
 
+      {/* --- UPDATED SETTINGS ROUTE --- */}
       <Route path='/settings' element={
         <GlassLayout>
-          <div className='w-full h-fit max-h-full overflow-y-auto custom-scrollbar bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl p-8 text-white'>
-            <h1 className="text-3xl font-bold text-green-400 mb-4">Settings</h1>
-            <ChatbotSettings/>
+          {/* 1. Outer Glass Container (Fixed Size) */}
+          <div className='w-full h-full bg-zinc-900/40 backdrop-blur-xl border border-white/10 rounded-3xl overflow-hidden shadow-2xl text-white relative'>
+            
+            {/* 2. Scrollable Area (Content moves inside this) */}
+            <div className='w-full h-full overflow-y-auto custom-scrollbar p-6 md:p-10'>
+                
+                {/* 3. Centered Content Wrapper (Prevents stretching) */}
+                <div className='max-w-4xl mx-auto'>
+                    <div className='mb-8 border-b border-white/10 pb-6'>
+                        <h1 className="text-3xl font-bold text-green-400">Settings</h1>
+                        <p className="text-zinc-400 mt-2">Manage your account preferences and AI configurations.</p>
+                    </div>
+                    
+                    {/* The Settings Form */}
+                    <ChatbotSettings/>
+                </div>
+            </div>
           </div>
         </GlassLayout>
       } />

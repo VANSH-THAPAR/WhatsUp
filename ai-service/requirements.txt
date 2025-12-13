@@ -1,0 +1,22 @@
+# Core Framework
+fastapi
+uvicorn[standard]
+python-multipart
+
+# LangChain Ecosystem (Renamed & Updated)
+langchain
+langchain-core
+langchain-community
+langchain-google-genai
+
+# Google Gemini SDK
+google-generativeai
+
+# RAG & Vector Store
+faiss-cpu
+
+# Utilities
+pydantic
+python-dotenv
+requests
+mysql-connector-python

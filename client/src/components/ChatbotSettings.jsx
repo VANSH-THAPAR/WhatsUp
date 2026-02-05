@@ -32,29 +32,29 @@ const ChatbotSettings = () => {
   };
 
   return (
-    <div className='w-full max-w-4xl mx-auto backdrop-blur-xl bg-black/40 border border-white/10 rounded-3xl p-8 text-white shadow-2xl'>
+    <div className='w-full max-w-4xl mx-auto backdrop-blur-xl bg-black/40 border border-white/10 rounded-2xl sm:rounded-3xl p-4 sm:p-8 text-white shadow-2xl h-full overflow-y-auto custom-scrollbar'>
       
       {/* Header */}
-      <div className="flex items-center gap-3 mb-8 border-b border-white/10 pb-4">
-        <Brain className="text-green-500 w-8 h-8" />
+      <div className="flex items-center gap-3 mb-6 sm:mb-8 border-b border-white/10 pb-4">
+        <Brain className="text-green-500 w-6 h-6 sm:w-8 sm:h-8" />
         <div>
-          <h2 className='text-2xl font-bold'>Model Configuration</h2>
-          <p className='text-zinc-400 text-sm'>Fine-tune hyperparameters and system behavior</p>
+          <h2 className='text-xl sm:text-2xl font-bold'>Model Configuration</h2>
+          <p className='text-zinc-400 text-xs sm:text-sm'>Fine-tune hyperparameters and system behavior</p>
         </div>
       </div>
 
-      <form className='w-full flex flex-col gap-8' onSubmit={handleSubmit(onSubmit)}>
+      <form className='w-full flex flex-col gap-6 sm:gap-8 pb-4' onSubmit={handleSubmit(onSubmit)}>
         
         {/* --- SECTION 1: CORE BEHAVIOR --- */}
         <div className='space-y-4'>
             <h3 className='text-green-400 font-semibold flex items-center gap-2'><Sparkles size={18}/> Persona & Style</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
                 {/* Mood Selector */}
                 <div className="group">
                     <label className='block mb-2 text-sm font-medium text-zinc-300'>Base Persona (Mood)</label>
                     <select
-                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-4 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none'
+                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-3 sm:p-4 focus:border-green-500 focus:ring-1 focus:ring-green-500 transition-all outline-none text-sm sm:text-base'
                         {...register('mood', { required: true })}
                     >
                         <option value="">Select Persona</option>
@@ -74,7 +74,7 @@ const ChatbotSettings = () => {
                         <input
                             type="text"
                             placeholder='e.g., A pirate from the 1700s'
-                            className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-4 focus:border-green-500 outline-none'
+                            className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-3 sm:p-4 focus:border-green-500 outline-none text-sm sm:text-base'
                             {...register('otherMood', { required: true })}
                         />
                     </div>
@@ -84,7 +84,7 @@ const ChatbotSettings = () => {
                 <div className="group">
                     <label className='block mb-2 text-sm font-medium text-zinc-300'>Response Format</label>
                     <select
-                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-4 focus:border-green-500 outline-none'
+                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-3 sm:p-4 focus:border-green-500 outline-none text-sm sm:text-base'
                         {...register('responseStyle')}
                     >
                         <option value="concise">Concise (Bullet points)</option>
@@ -97,10 +97,10 @@ const ChatbotSettings = () => {
         </div>
 
         {/* --- SECTION 2: HYPERPARAMETERS --- */}
-        <div className='space-y-4 p-6 bg-white/5 rounded-2xl border border-white/5'>
+        <div className='space-y-4 p-4 sm:p-6 bg-white/5 rounded-2xl border border-white/5'>
             <h3 className='text-green-400 font-semibold flex items-center gap-2'><Sliders size={18}/> Model Hyperparameters</h3>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-8">
                 {/* Temperature */}
                 <div className="group">
                     <div className="flex justify-between mb-2">
@@ -122,7 +122,7 @@ const ChatbotSettings = () => {
                 <div className="group">
                      <label className='block mb-2 text-sm font-medium text-zinc-300'>Max Output Tokens</label>
                      <select 
-                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-3 focus:border-green-500 outline-none'
+                        className='w-full bg-zinc-900/50 text-white border border-zinc-700 rounded-xl p-3 focus:border-green-500 outline-none text-sm sm:text-base'
                         {...register('maxTokens')}
                      >
                         <option value="256">Short (256)</option>

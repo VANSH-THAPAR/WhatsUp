@@ -74,15 +74,15 @@ const Chatbot = () => {
   };
 
   return (
-    <div className='flex flex-col h-full'> 
+    <div className='flex flex-col h-full bg-zinc-900 rounded-3xl overflow-hidden'> 
       {/* 1. Messages Area */}
-      <div className='flex-1 overflow-y-auto custom-scrollbar p-4 space-y-4'>
+      <div className='flex-1 overflow-y-auto custom-scrollbar p-2 sm:p-4 space-y-4'>
         {messages.map((msg, index) => (
           <div key={index} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-            <div className={`w-8 h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-green-600' : 'bg-zinc-700'}`}>
-              {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
+            <div className={`w-6 h-6 sm:w-8 sm:h-8 rounded-full flex items-center justify-center shrink-0 ${msg.role === 'user' ? 'bg-green-600' : 'bg-zinc-700'}`}>
+              {msg.role === 'user' ? <User size={14} /> : <Bot size={14} />}
             </div>
-            <div className={`p-4 rounded-2xl max-w-[80%] whitespace-pre-wrap ${
+            <div className={`p-3 sm:p-4 rounded-xl sm:rounded-2xl max-w-[85%] whitespace-pre-wrap text-sm sm:text-base break-words ${
               msg.role === 'user' 
                 ? 'bg-green-600 text-black rounded-tr-none' 
                 : msg.isError 
@@ -96,10 +96,10 @@ const Chatbot = () => {
         
         {loading && (
           <div className='flex gap-3'>
-            <div className='w-8 h-8 rounded-full bg-zinc-700 flex items-center justify-center shrink-0 animate-pulse'>
-              <Bot size={16} />
+            <div className='w-6 h-6 sm:w-8 sm:h-8 rounded-full bg-zinc-700 flex items-center justify-center shrink-0 animate-pulse'>
+              <Bot size={14} />
             </div>
-            <div className='bg-zinc-800 p-4 rounded-2xl rounded-tl-none text-zinc-400 italic flex items-center gap-2'>
+            <div className='bg-zinc-800 p-3 sm:p-4 rounded-xl sm:rounded-2xl rounded-tl-none text-zinc-400 italic flex items-center gap-2 text-sm sm:text-base'>
               <RefreshCw className='animate-spin' size={14} /> Thinking...
             </div>
           </div>
@@ -108,29 +108,31 @@ const Chatbot = () => {
       </div>
 
       {/* 2. Input Area */}
-      <form onSubmit={handleSend} className='mt-4 relative pb-2'>
-        <input
-          type="text"
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          placeholder={displaySettings?.enableDocs ? "Ask a question about your docs..." : "Type a message..."}
-          className='w-full bg-zinc-800/50 border border-zinc-600 rounded-xl py-4 pl-4 pr-12 text-white focus:outline-none focus:border-green-500 transition-all'
-        />
-        <button 
-          type="submit" 
-          disabled={loading}
-          className='absolute right-2 top-2 bottom-4 bg-green-600 hover:bg-green-500 text-black rounded-lg p-2 transition-colors disabled:opacity-50'
-        >
-          <Send size={20} />
-        </button>
+      <form onSubmit={handleSend} className='p-2 sm:p-4 relative bg-zinc-900'>
+        <div className="relative">
+          <input
+            type="text"
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            placeholder={displaySettings?.enableDocs ? "Ask a question about your docs..." : "Type a message..."}
+            className='w-full bg-zinc-800/50 border border-zinc-600 rounded-xl py-3 sm:py-4 pl-3 sm:pl-4 pr-10 sm:pr-12 text-white focus:outline-none focus:border-green-500 transition-all text-sm sm:text-base'
+          />
+          <button 
+            type="submit" 
+            disabled={loading}
+            className='absolute right-2 top-1/2 -translate-y-1/2 bg-green-600 hover:bg-green-500 text-black rounded-lg p-2 transition-colors disabled:opacity-50'
+          >
+            <Send size={18} />
+          </button>
+        </div>
+        
+        {/* 3. Settings Indicator */}
+        <div className='mt-2 text-[10px] sm:text-xs text-zinc-500 flex items-center gap-2 justify-center'>
+          <Sliders size={10} />
+          <span>Persona: {displaySettings?.mood || 'Default'}</span>
+          {displaySettings?.enableDocs && <span className='text-green-500 font-bold'>• RAG Active</span>}
+        </div>
       </form>
-      
-      {/* 3. Settings Indicator */}
-      <div className='mt-0 mb-2 text-xs text-zinc-500 flex items-center gap-2 justify-center'>
-        <Sliders size={10} />
-        <span>Persona: {displaySettings?.mood || 'Default'}</span>
-        {displaySettings?.enableDocs && <span className='text-green-500 font-bold'>• RAG Active</span>}
-      </div>
     </div>
   );
 };

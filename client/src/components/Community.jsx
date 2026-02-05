@@ -77,15 +77,15 @@ const Community = () => {
   return (
     <div className='w-full h-full flex flex-col bg-zinc-900 text-white'>
       {/* Messages Area */}
-      <div className='grow overflow-y-auto p-4 space-y-3' style={{ height: '90%' }}>
+      <div className='grow overflow-y-auto p-2 sm:p-4 space-y-2 sm:space-y-3 custom-scrollbar' style={{ height: '90%' }}>
         {message.map((msg, index) => {
             const isMe = msg.sender === name; 
             return (
-              <div key={msg.id || index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[70%] md:max-w-md p-3 shadow-md relative rounded-xl ${isMe ? 'bg-green-700 rounded-tr-none' : 'bg-zinc-800 rounded-tl-none'}`}>
+              <div key={msg.id || index} className={`flex ${isMe ? 'justify-end' : 'justify-start'} px-1 sm:px-0`}>
+                <div className={`max-w-xs sm:max-w-sm md:max-w-md p-2 sm:p-3 shadow-md relative rounded-lg sm:rounded-xl text-xs sm:text-sm ${isMe ? 'bg-green-700 rounded-tr-none' : 'bg-zinc-800 rounded-tl-none'}`}>
                   {!isMe && <p className='text-xs font-bold mb-1 text-red-400'>{msg.sender}</p>}
-                  <p className='text-sm text-gray-100 whitespace-pre-wrap'>{msg.text}</p>
-                  <p className={`text-[10px] mt-1 text-right ${isMe ? 'text-green-200' : 'text-zinc-400'}`}>{msg.time}</p>
+                  <p className='text-gray-100 whitespace-pre-wrap break-words'>{msg.text}</p>
+                  <p className={`text-[9px] sm:text-[10px] mt-1 text-right ${isMe ? 'text-green-200' : 'text-zinc-400'}`}>{msg.time}</p>
                 </div>
               </div>
             )
@@ -94,30 +94,30 @@ const Community = () => {
       </div>
 
       {/* Input Area */}
-      <div className='min-h-[10%] w-full border-t border-zinc-700 p-3 bg-zinc-900'>
-        <div className='rounded-full bg-zinc-800 p-2 flex items-center gap-2'>
+      <div className='min-h-auto w-full border-t border-zinc-700 p-2 sm:p-3 bg-zinc-900'>
+        <div className='rounded-full bg-zinc-800 p-2 flex items-center gap-1 sm:gap-2'>
           <input 
             type="text" 
-            placeholder='Type a message...' 
-            className='grow bg-transparent px-3 text-white outline-none placeholder-zinc-500' 
+            placeholder='Type something...' 
+            className='flex-1 bg-transparent outline-none text-white placeholder-zinc-500 text-xs sm:text-sm' 
             onChange={(e) => { setText(e.target.value) }} 
             value={text} 
-            onKeyDown={(e) => e.key === 'Enter' && handlechatsubmit()} 
+            onKeyPress={(e) => e.key === 'Enter' && handlechatsubmit()} 
           />
           <button 
-  onClick={handlechatsubmit} 
-  disabled={!text.trim()} 
-  className={`group w-12 h-12 rounded-full flex items-center justify-center transition-all duration-300 ease-out
-    ${text.trim() 
-      ? 'bg-linear-to-r from-green-400 to-emerald-600 text-zinc-900 shadow-[0_0_15px_rgba(74,222,128,0.5)] hover:scale-110 hover:shadow-[0_0_25px_rgba(74,222,128,0.8)] active:scale-95' 
-      : 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
-    }`}
->
-  <FontAwesomeIcon 
-    icon={faPaperPlane} 
-    className={`text-lg transition-transform duration-300 ${text.trim() ? 'group-hover:-translate-y-0.5 group-hover:translate-x-0.5' : ''}`} 
-  />
-</button>
+            onClick={handlechatsubmit} 
+            disabled={!text.trim()} 
+            className={`group flex-shrink-0 w-10 h-10 sm:w-12 sm:h-12 rounded-full flex items-center justify-center transition-all duration-300 ease-out text-lg sm:text-xl
+              ${text.trim() 
+                ? 'bg-linear-to-r from-green-400 to-emerald-600 text-zinc-900 shadow-[0_0_15px_rgba(74,222,128,0.5)] hover:scale-110 hover:shadow-[0_0_25px_rgba(74,222,128,0.8)] active:scale-95' 
+                : 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
+              }`}
+          >
+            <FontAwesomeIcon 
+              icon={faPaperPlane} 
+              className={`transition-transform duration-300 ${text.trim() ? 'group-hover:-translate-y-0.5 group-hover:translate-x-0.5' : ''}`} 
+            />
+          </button>
         </div>
       </div>
     </div>

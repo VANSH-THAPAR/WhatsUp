@@ -90,13 +90,13 @@ const PrivateChat = () => {
   return (
     <div className='w-full h-full flex flex-col bg-zinc-900 text-white'>
       {/* Header */}
-      <div className="p-4 border-b border-zinc-700 bg-zinc-800 flex items-center justify-between gap-3">
-         <div className='flex items-center gap-3'>
-            <div className='w-8 h-8 rounded-full bg-green-700 flex items-center justify-center font-bold'>
+      <div className="p-3 sm:p-4 border-b border-zinc-700 bg-zinc-800 flex items-center justify-between gap-3">
+         <div className='flex items-center gap-2 sm:gap-3 min-w-0'>
+            <div className='w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-green-700 flex items-center justify-center font-bold flex-shrink-0 text-xs sm:text-sm'>
                 {targetEmail.charAt(0).toUpperCase()}
             </div>
-            <div>
-                <p className='font-bold'>{targetEmail}</p>
+            <div className='min-w-0'>
+                <p className='font-bold text-xs sm:text-sm truncate'>{targetEmail}</p>
                 <p className='text-xs text-green-400'>Online</p>
             </div>
          </div>
@@ -106,15 +106,15 @@ const PrivateChat = () => {
          </div>
       </div>
 
-      {/* Messages */}
-      <div className='grow overflow-y-auto p-4 space-y-3 custom-scrollbar' style={{ height: '80%' }}>
+      {/* Messages Container */}
+      <div className='grow overflow-y-auto p-2 sm:p-4 space-y-2 custom-scrollbar'>
         {messages.map((msg, index) => {
             const isMe = msg.senderEmail === myEmail;
             return (
-              <div key={msg.id || index} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[70%] p-3 shadow-md rounded-xl ${isMe ? 'bg-green-700 rounded-tr-none' : 'bg-zinc-800 rounded-tl-none'}`}>
-                  <p className='text-sm text-gray-100 whitespace-pre-wrap'>{msg.text}</p>
-                  <p className={`text-[10px] mt-1 text-right ${isMe ? 'text-green-200' : 'text-zinc-400'}`}>{msg.time}</p>
+              <div key={msg.id || index} className={`flex ${isMe ? 'justify-end' : 'justify-start'} px-1 sm:px-0`}>
+                <div className={`max-w-xs sm:max-w-sm md:max-w-md p-2 sm:p-3 shadow-md relative rounded-lg sm:rounded-xl text-xs sm:text-sm ${isMe ? 'bg-green-700 rounded-tr-none' : 'bg-zinc-800 rounded-tl-none'}`}>
+                  <p className='text-gray-100 break-words'>{msg.text}</p>
+                  <p className={`text-[9px] sm:text-[10px] mt-1 text-right ${isMe ? 'text-green-200' : 'text-zinc-400'}`}>{msg.time}</p>
                 </div>
               </div>
             )
@@ -122,20 +122,20 @@ const PrivateChat = () => {
         <div ref={messagesEndRef} />
       </div>
 
-      {/* Input */}
-      <div className='p-3 bg-zinc-900 border-t border-zinc-700'>
-        <div className='rounded-full bg-zinc-800 p-2 flex items-center gap-2'>
+      {/* Input Area */}
+      <div className='min-h-auto w-full border-t border-zinc-700 p-2 sm:p-3 bg-zinc-900'>
+        <div className='rounded-full bg-zinc-800 p-2 flex items-center gap-1 sm:gap-2'>
           <input 
             type="text" 
-            placeholder={conversationId ? 'Type a message...' : 'Connecting...'}
+            placeholder={conversationId ? 'Type your message...' : 'Connecting...'}
             disabled={!conversationId}
-            className='grow bg-transparent px-3 text-white outline-none disabled:opacity-50' 
+            className='flex-1 bg-transparent outline-none text-white placeholder-zinc-500 text-xs sm:text-sm disabled:opacity-50' 
             onChange={(e) => setText(e.target.value)} 
             value={text} 
-            onKeyDown={(e) => e.key === 'Enter' && handleSend()} 
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()} 
           />
-          <button onClick={handleSend} disabled={!text.trim() || !conversationId} className={`${text.trim() && conversationId ? 'text-green-500' : 'text-zinc-600'} p-2`}>
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='w-6 h-6 fill-current'><path d="M498.1 5.6c11.3 6.6 17.6 18.2 17.6 30.5V474.7c0 12.3-6.4 23.9-17.6 30.5s-24.1 6.3-36-1.1L.6 270.8c-10.7-6.1-12.7-19.6-4.1-27.7l46.2-44.5 137.9 79.1 169.5-188.7c7.8-8.7 20.3-10.3 29.5-4.1s13.4 16.9 10 27.6L191.8 387.2c-2.4 7.2-8.6 12.4-16.1 14.2l-152 35.1C21.7 441.2 7.7 440.3 0 432.2L0 432V432z"/></svg>
+          <button onClick={handleSend} disabled={!text.trim() || !conversationId} className={`${text.trim() && conversationId ? 'text-green-500' : 'text-zinc-600'} p-2 flex-shrink-0`}>
+             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='w-5 h-5 sm:w-6 sm:h-6 fill-current'><path d="M498.1 5.6c11.3 6.6 17.6 18.2 17.6 30.5V474.7c0 12.3-6.4 23.9-17.6 30.5s-24.1 6.3-36-1.1L.6 270.8c-10.7-6.1-12.7-19.6-4.1-27.7l46.2-44.5 137.9 79.1 169.5-188.7c7.8-8.7 20.3-10.3 29.5-4.1s13.4 16.9 10 27.6L191.8 387.2c-2.4 7.2-8.6 12.4-16.1 14.2l-152 35.1C21.7 441.2 7.7 440.3 0 432.2L0 432V432z"/></svg>
           </button>
         </div>
       </div>

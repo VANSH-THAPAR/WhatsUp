@@ -1,7 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from 'axios';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { connectWS } from '../Client'; 
+import { Search, Bell } from 'lucide-react';
 
 const ChatNavbar = ({ className = '' }) => {
   const [contacts, setContacts] = useState([]);
@@ -11,12 +12,6 @@ const ChatNavbar = ({ className = '' }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const socket = useRef(null);
-
-  const SVGIcon = ({ d, title }) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="w-5 h-5 fill-current" title={title}>
-      <path d={d} />
-    </svg>
-  );
 
   const backendUrl = import.meta.env.VITE_BACKEND_URL || 'http://localhost:3000';
 
@@ -69,16 +64,16 @@ const ChatNavbar = ({ className = '' }) => {
       {/* Header */}
       <div className='p-3 sm:p-6 pb-2 sm:pb-4'>
         <div className='flex justify-between items-center mb-4 sm:mb-6'>
-          <div className="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-500" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</div>
+          <Link to="/" className="text-lg sm:text-2xl font-bold text-transparent bg-clip-text bg-linear-to-r from-green-400 to-emerald-500 cursor-pointer" style={{fontFamily: "Rubik Puddles"}}>WhatsUp</Link>
           <div className="text-zinc-400 hover:text-green-400 transition-colors cursor-pointer text-sm sm:text-base">
-              <SVGIcon title="Notifications" d="M224 512c35.3 0 64-28.7 64-64V384H160v64c0 35.3 28.7 64 64 64zm-32-80V32h64V128h64V32h64V128h64V32h32c17.7 0 32 14.3 32 32v288c0 17.7-14.3 32-32 32H0c-17.7 0-32-14.3-32-32V64c0-17.7 14.3-32 32-32h32v96h64V32h64v96h64V32h64v32h32v256h-32c-17.7 0-32 14.3-32 32z"/>
+              <Bell size={20} className="sm:w-5 sm:h-5" />
           </div>
         </div>
         
         {/* Search Bar */}
         <div className='group bg-zinc-800/50 rounded-xl sm:rounded-2xl h-10 sm:h-12 flex items-center px-3 sm:px-4 border border-zinc-700/50 focus-within:border-green-500/50 focus-within:bg-zinc-800 focus-within:shadow-[0_0_15px_rgba(34,197,94,0.1)] transition-all duration-300'>
           <div className="text-zinc-500 group-focus-within:text-green-400 transition-colors text-sm sm:text-base">
-            <SVGIcon d="M416 208c0 45.9-14.9 88.3-40 122.7L502.6 457.4c12.5 12.5 12.5 32.8 0 45.3s-32.8 12.5-45.3 0L330.7 376c-34.4 25.2-76.8 40-122.7 40C93.1 416 0 322.9 0 208S93.1 0 208 0S416 93.1 416 208zM208 64c77.3 0 140 62.7 140 140S285.3 348 208 348 68 285.3 68 208 130.7 64 208 64z" />
+            <Search size={18} className="sm:w-5 sm:h-5" />
           </div>
           <input 
             type="text" 

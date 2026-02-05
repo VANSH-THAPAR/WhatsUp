@@ -2,6 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connectWS } from '../Client'; 
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
+import { Send } from 'lucide-react';
 
 const PrivateChat = () => {
   const { email: targetEmail } = useParams(); 
@@ -135,7 +136,7 @@ const PrivateChat = () => {
             onKeyPress={(e) => e.key === 'Enter' && handleSend()} 
           />
           <button onClick={handleSend} disabled={!text.trim() || !conversationId} className={`${text.trim() && conversationId ? 'text-green-500' : 'text-zinc-600'} p-2 flex-shrink-0`}>
-             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className='w-5 h-5 sm:w-6 sm:h-6 fill-current'><path d="M498.1 5.6c11.3 6.6 17.6 18.2 17.6 30.5V474.7c0 12.3-6.4 23.9-17.6 30.5s-24.1 6.3-36-1.1L.6 270.8c-10.7-6.1-12.7-19.6-4.1-27.7l46.2-44.5 137.9 79.1 169.5-188.7c7.8-8.7 20.3-10.3 29.5-4.1s13.4 16.9 10 27.6L191.8 387.2c-2.4 7.2-8.6 12.4-16.1 14.2l-152 35.1C21.7 441.2 7.7 440.3 0 432.2L0 432V432z"/></svg>
+             <Send size={24} />
           </button>
         </div>
       </div>

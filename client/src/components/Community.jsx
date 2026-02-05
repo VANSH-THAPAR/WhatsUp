@@ -2,8 +2,7 @@ import React, { useEffect, useRef, useState } from 'react'
 import { connectWS } from '../Client'; // Make sure Client.js is in src/
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faPaperPlane } from '@fortawesome/free-solid-svg-icons';
+import { Send } from 'lucide-react';
 
 const Community = () => {
   const socket = useRef(null);
@@ -113,8 +112,8 @@ const Community = () => {
                 : 'bg-zinc-800/50 text-zinc-600 cursor-not-allowed'
               }`}
           >
-            <FontAwesomeIcon 
-              icon={faPaperPlane} 
+            <Send 
+              size={20}
               className={`transition-transform duration-300 ${text.trim() ? 'group-hover:-translate-y-0.5 group-hover:translate-x-0.5' : ''}`} 
             />
           </button>

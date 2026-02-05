@@ -1,28 +1,65 @@
-import React, { useRef } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { motion, useScroll, useTransform, useSpring, useMotionValue } from 'framer-motion';
+import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { MessageCircle, Shield, Globe, Zap, ArrowRight, Smartphone, Lock, Users } from 'lucide-react';
+
+const Spotlight = () => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  useEffect(() => {
+    const handleMouseMove = ({ clientX, clientY }) => {
+      mouseX.set(clientX);
+      mouseY.set(clientY);
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
+  return (
+    <motion.div
+      className="pointer-events-none fixed inset-0 z-30 transition-opacity duration-300"
+      style={{
+        background: useMotionTemplate`
+          radial-gradient(
+            600px circle at ${mouseX}px ${mouseY}px,
+            rgba(34, 197, 94, 0.08),
+            transparent 80%
+          )
+        `,
+      }}
+    />
+  );
+};
 
 const Item3D = ({ children, className }) => {
   const ref = useRef(null);
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
-  const mouseXSpring = useSpring(x);
-  const mouseYSpring = useSpring(y);
+  const mouseXSpring = useSpring(x, { stiffness: 300, damping: 30 });
+  const mouseYSpring = useSpring(y, { stiffness: 300, damping: 30 });
 
-  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["17.5deg", "-17.5deg"]);
-  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-17.5deg", "17.5deg"]);
+  const rotateX = useTransform(mouseYSpring, [-0.5, 0.5], ["20deg", "-20deg"]);
+  const rotateY = useTransform(mouseXSpring, [-0.5, 0.5], ["-20deg", "20deg"]);
+  
+  // Glare effect
+  const glareX = useTransform(mouseXSpring, [-0.5, 0.5], ["0%", "100%"]);
+  const glareY = useTransform(mouseYSpring, [-0.5, 0.5], ["0%", "100%"]);
 
   const handleMouseMove = (e) => {
     if (!ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const width = rect.width;
     const height = rect.height;
+    
+    // Calculate relative position based on center
     const mouseX = e.clientX - rect.left;
     const mouseY = e.clientY - rect.top;
+    
     const xPct = mouseX / width - 0.5;
     const yPct = mouseY / height - 0.5;
+    
     x.set(xPct);
     y.set(yPct);
   };
@@ -42,9 +79,23 @@ const Item3D = ({ children, className }) => {
         rotateX,
         transformStyle: "preserve-3d",
       }}
-      className={className}
+      className={`${className} transition-all duration-200 ease-out`}
     >
-      <div style={{ transform: "translateZ(75px)", transformStyle: "preserve-3d" }}>
+      <div 
+        className="relative h-full w-full" 
+        style={{ transform: "translateZ(50px)", transformStyle: "preserve-3d" }}
+      >
+         {/* Moving Glare Layer */}
+         <motion.div 
+            className="absolute inset-0 z-20 pointer-events-none opacity-40 rounded-[40px]"
+            style={{
+                background: useMotionTemplate`radial-gradient(
+                    circle at ${glareX} ${glareY},
+                    rgba(255,255,255,0.2),
+                    transparent 80%
+                )`
+            }}
+         />
         {children}
       </div>
     </motion.div>
@@ -93,6 +144,7 @@ const Home = () => {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white overflow-x-hidden selection:bg-green-500/30">
+      <Spotlight />
       <GridBackground />
       
       {/* Navbar Placeholder for visual consistency */}
@@ -146,43 +198,47 @@ const Home = () => {
           </div>
 
           <div className="flex-1 flex justify-center perspective-1000">
-             <Item3D className="w-full max-w-md aspect-square relative">
+             <Item3D className="w-full max-w-md aspect-square relative cursor-pointer">
                 {/* 3D Floating Elements */}
-                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-purple-500/20 rounded-[40px] border border-white/10 backdrop-blur-xl shadow-2xl flex items-center justify-center">
+                <div className="absolute inset-0 bg-gradient-to-br from-green-500/20 to-purple-500/20 rounded-[40px] border border-white/10 backdrop-blur-xl shadow-[0_0_60px_rgba(34,197,94,0.15)] flex items-center justify-center transform-gpu transition-all hover:bg-zinc-800/30">
                     <MessageCircle size={100} className="text-green-400 drop-shadow-[0_0_30px_rgba(74,222,128,0.5)]" />
                 </div>
                 
-                {/* Floating Badge 1 */}
+                {/* Floating Badge 1 - Moves Faster */}
                 <motion.div 
-                    animate={{ y: [0, -20, 0] }} 
+                    animate={{ y: [0, -15, 0] }} 
                     transition={{ repeat: Infinity, duration: 4, ease: "easeInOut" }}
-                    className="absolute -top-10 -right-10 p-4 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-xl flex items-center gap-3"
-                    style={{ transform: "translateZ(100px)" }}
+                    className="absolute -top-6 -right-6 p-4 bg-zinc-900/90 border border-zinc-700/50 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-sm"
+                    style={{ transform: "translateZ(80px)" }}
                 >
-                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400">
+                    <div className="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center text-blue-400 shadow-inner">
                         <Lock size={20} />
                     </div>
                     <div>
-                        <p className="text-xs text-zinc-500 font-bold">Encrypted</p>
-                        <p className="text-sm font-bold">End-to-End</p>
+                        <p className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Secure</p>
+                        <p className="text-sm font-bold text-white">End-to-End</p>
                     </div>
                 </motion.div>
 
-                {/* Floating Badge 2 */}
+                {/* Floating Badge 2 - Moves Deepest */}
                 <motion.div 
-                    animate={{ y: [0, 20, 0] }} 
+                    animate={{ y: [0, 15, 0] }} 
                     transition={{ repeat: Infinity, duration: 5, ease: "easeInOut", delay: 1 }}
-                    className="absolute -bottom-10 -left-10 p-4 bg-zinc-900 border border-zinc-700 rounded-2xl shadow-xl flex items-center gap-3"
+                    className="absolute -bottom-10 -left-6 p-4 bg-zinc-900/90 border border-zinc-700/50 rounded-2xl shadow-2xl flex items-center gap-3 backdrop-blur-sm"
                     style={{ transform: "translateZ(120px)" }}
                 >
-                    <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400">
+                    <div className="w-10 h-10 rounded-full bg-orange-500/20 flex items-center justify-center text-orange-400 shadow-inner">
                         <Zap size={20} />
                     </div>
                     <div>
-                        <p className="text-xs text-zinc-500 font-bold">Speed</p>
-                        <p className="text-sm font-bold">Lightning Fast</p>
+                        <p className="text-xs text-zinc-500 font-bold uppercase tracking-wider">Fast</p>
+                        <p className="text-sm font-bold text-white">Lightning Speed</p>
                     </div>
                 </motion.div>
+
+                {/* Decorative Dots */}
+                <div className="absolute -z-10 -top-20 -left-20 w-40 h-40 bg-purple-500/30 rounded-full blur-[100px]" />
+                <div className="absolute -z-10 -bottom-20 -right-20 w-40 h-40 bg-green-500/30 rounded-full blur-[100px]" />
              </Item3D>
           </div>
 

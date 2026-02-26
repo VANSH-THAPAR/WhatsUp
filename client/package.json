@@ -15,6 +15,10 @@
     "@fortawesome/free-regular-svg-icons": "^7.1.0",
     "@fortawesome/free-solid-svg-icons": "^7.1.0",
     "@fortawesome/react-fontawesome": "^3.1.0",
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.5.0",
+    "@splinetool/react-spline": "^4.1.0",
+    "@splinetool/runtime": "^1.12.51",
     "@tailwindcss/vite": "^4.1.17",
     "axios": "^1.13.2",
     "framer-motion": "^12.31.0",
@@ -25,6 +29,7 @@
     "react-router-dom": "^7.9.6",
     "socket.io-client": "^4.8.1",
     "tailwindcss": "^4.1.17",
+    "three": "^0.182.0",
     "unique-slug": "^6.0.0"
   },
   "devDependencies": {
